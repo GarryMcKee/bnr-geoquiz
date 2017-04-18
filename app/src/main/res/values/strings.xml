@@ -1,8 +1,20 @@
 <resources>
     <string name="app_name">GeoQuiz</string>
+
+    <!-- Buttons -->
     <string name="true_button">True</string>
     <string name="false_button">False</string>
     <string name="next_button">Next</string>
+
+    <!-- UI Labels -->
     <string name="correct_toast">Correct!</string>
     <string name="incorrect_toast">Incorrect!</string>
+
+    <!-- Questions -->
+    <string name="question_australia"></string>
+    <string name="question_oceans"></string>
+    <string name="question_mideast"></string>
+    <string name="question_africa"></string>
+    <string name="question_americas"></string>
+    <string name="question_asia"></string>
 </resources>
