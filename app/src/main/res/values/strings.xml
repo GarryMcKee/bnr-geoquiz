@@ -4,6 +4,7 @@
     <!-- Buttons -->
     <string name="true_button">True</string>
     <string name="false_button">False</string>
+    <string name="previous_button">Previous</string>
     <string name="next_button">Next</string>
 
     <!-- UI Labels -->

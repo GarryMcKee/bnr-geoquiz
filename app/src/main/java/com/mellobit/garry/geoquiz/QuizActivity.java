@@ -11,6 +11,7 @@ public class QuizActivity extends AppCompatActivity {
 
     private Button trueButton;
     private Button falseButton;
+    private Button previousButton;
     private Button nextButton;
     private TextView questionTextView;
 
@@ -32,7 +33,10 @@ public class QuizActivity extends AppCompatActivity {
 
         trueButton = (Button) findViewById(R.id.true_button);
         falseButton = (Button) findViewById(R.id.false_button);
+
+        previousButton = (Button) findViewById(R.id.previous_button);
         nextButton = (Button) findViewById(R.id.next_button);
+
         questionTextView = (TextView) findViewById(R.id.question_text_view);
 
         final int questionTextResId = questionBank[currentIndex].getTextResId();
@@ -52,16 +56,41 @@ public class QuizActivity extends AppCompatActivity {
             }
         });
 
+        previousButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                previousQuestion();
+            }
+        });
+
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                currentIndex = (currentIndex + 1) % questionBank.length;
-                updateQuestion();
+                nextQuestion();
+            }
+        });
+
+        questionTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                nextQuestion();
             }
         });
     }
 
-    private void updateQuestion() {
+    private void previousQuestion() {
+        if (currentIndex > 0) {
+            currentIndex--;
+        } else {
+            currentIndex = questionBank.length-1;
+        }
+
+        int questionTextResId = questionBank[currentIndex].getTextResId();
+        questionTextView.setText(questionTextResId);
+    }
+
+    private void nextQuestion() {
+        currentIndex = (currentIndex + 1) % questionBank.length;
         int questionTextResId = questionBank[currentIndex].getTextResId();
         questionTextView.setText(questionTextResId);
     }
