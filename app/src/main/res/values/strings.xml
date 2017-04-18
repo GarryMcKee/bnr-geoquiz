@@ -18,4 +18,8 @@
     <string name="question_africa">The source of the nile river is in Egypt</string>
     <string name="question_americas">The Amazon river is the largest river in the Americas</string>
     <string name="question_asia">Lake Baikal is the world\'s oldest and deepest freshwater lake</string>
+
+    <!-- Accessibility Labels -->
+    <string name="previous_button_acc">Previous</string>
+    <string name="next_button_acc">Next</string>
 </resources>

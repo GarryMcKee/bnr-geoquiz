@@ -4,6 +4,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -11,8 +12,8 @@ public class QuizActivity extends AppCompatActivity {
 
     private Button trueButton;
     private Button falseButton;
-    private Button previousButton;
-    private Button nextButton;
+    private ImageButton previousButton;
+    private ImageButton nextButton;
     private TextView questionTextView;
 
     private Question[] questionBank = new Question[] {
@@ -34,8 +35,8 @@ public class QuizActivity extends AppCompatActivity {
         trueButton = (Button) findViewById(R.id.true_button);
         falseButton = (Button) findViewById(R.id.false_button);
 
-        previousButton = (Button) findViewById(R.id.previous_button);
-        nextButton = (Button) findViewById(R.id.next_button);
+        previousButton = (ImageButton) findViewById(R.id.previous_button);
+        nextButton = (ImageButton) findViewById(R.id.next_button);
 
         questionTextView = (TextView) findViewById(R.id.question_text_view);
 
