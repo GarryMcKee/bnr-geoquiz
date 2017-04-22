@@ -38,4 +38,5 @@ public class Question {
     public void setAnswered (boolean isAnswered) {
         this.isAnswered = isAnswered;
     }
+
 }

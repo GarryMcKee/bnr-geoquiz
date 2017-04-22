@@ -3,6 +3,7 @@ package com.mellobit.garry.geoquiz;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.StringBuilderPrinter;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -13,6 +14,9 @@ public class QuizActivity extends AppCompatActivity {
 
     private static final String LOG_TAG = QuizActivity.class.getSimpleName();
     private static final String KEY_INDEX = "index";
+    private static final String KEY_SCORE = "score";
+    private static final String KEY_QUESTIONS_ANSWERED = "questions_answered";
+    private static final String KEY_QUESTIONS_ANSWERED_INDEX = "questions_answered_index";
 
     private Button trueButton;
     private Button falseButton;
@@ -30,6 +34,8 @@ public class QuizActivity extends AppCompatActivity {
     };
 
     private int currentIndex = 0;
+    private int questionsAnswered = 0;
+    private int score = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +45,18 @@ public class QuizActivity extends AppCompatActivity {
         setContentView(R.layout.activity_quiz);
 
         if(savedInstanceState != null) {
-            currentIndex = savedInstanceState.getInt(KEY_INDEX);
+            this.currentIndex = savedInstanceState.getInt(KEY_INDEX);
+            this.score = savedInstanceState.getInt(KEY_SCORE);
+            this.questionsAnswered = savedInstanceState.getInt(KEY_QUESTIONS_ANSWERED);
+
+            boolean[] questionAnsweredIndex = savedInstanceState.getBooleanArray(KEY_QUESTIONS_ANSWERED_INDEX);
+            for(int i=0; i<questionAnsweredIndex.length; i++) {
+                if (questionAnsweredIndex[i]){
+                    questionBank[i].setAnswered(true);
+                } else {
+                    questionBank[i].setAnswered(false);
+                }
+            }
         }
 
         trueButton = (Button) findViewById(R.id.true_button);
@@ -87,6 +104,8 @@ public class QuizActivity extends AppCompatActivity {
                 nextQuestion();
             }
         });
+
+        checkQuestionAnswered();
     }
 
     @Override
@@ -122,7 +141,21 @@ public class QuizActivity extends AppCompatActivity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+        boolean[] questionsAnsweredIndex = new boolean[questionBank.length];
+
+        for (int i =0; i < questionBank.length; i++) {
+            if(questionBank[i].isAnswered()){
+                questionsAnsweredIndex[i] = true;
+            } else {
+                questionsAnsweredIndex[i] = false;
+            }
+        }
+
+        outState.putBooleanArray(KEY_QUESTIONS_ANSWERED_INDEX, questionsAnsweredIndex);
         outState.putInt(KEY_INDEX, currentIndex);
+        outState.putInt(KEY_SCORE, score);
+        outState.putInt(KEY_QUESTIONS_ANSWERED, questionsAnswered);
+
     }
 
     private void previousQuestion() {
@@ -148,13 +181,13 @@ public class QuizActivity extends AppCompatActivity {
 
     private void checkAnswer(boolean userPressedTrue) {
         if(userPressedTrue == questionBank[currentIndex].isAnswerTrue()) {
-            Toast.makeText(this, R.string.correct_toast, Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(this, R.string.incorrect_toast, Toast.LENGTH_SHORT).show();
+            score++;
         }
 
         questionBank[currentIndex].setAnswered(true);
+        questionsAnswered ++;
         checkQuestionAnswered();
+        checkisFinished();
     }
 
     private void checkQuestionAnswered() {
@@ -165,5 +198,17 @@ public class QuizActivity extends AppCompatActivity {
             trueButton.setEnabled(true);
             falseButton.setEnabled(true);
         }
+    }
+
+    private void checkisFinished() {
+        if (questionsAnswered == questionBank.length) {
+            showScore();
+        }
+    }
+
+    private void showScore() {
+        float percentCorrect = ((float)score)/((float)questionBank.length) * 100;
+        String scoreText = getString(R.string.score_label, percentCorrect);
+        Toast.makeText(this, scoreText, Toast.LENGTH_SHORT).show();
     }
 }

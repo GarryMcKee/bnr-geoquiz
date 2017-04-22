@@ -10,6 +10,7 @@
     <!-- UI Labels -->
     <string name="correct_toast">Correct!</string>
     <string name="incorrect_toast">Incorrect!</string>
+    <string name="score_label">You got %f%% of the questions correct!</string>
 
     <!-- Questions -->
     <string name="question_australia">Canberra is the capital of Australia</string>
