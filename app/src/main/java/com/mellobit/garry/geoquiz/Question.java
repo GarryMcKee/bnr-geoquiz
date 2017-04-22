@@ -8,6 +8,7 @@ public class Question {
 
     private int textResId;
     private boolean answerTrue;
+    private boolean isAnswered;
 
     public Question(int textResId, boolean answerTrue) {
         this.setTextResId(textResId);
@@ -16,6 +17,10 @@ public class Question {
 
     public int getTextResId() {
         return textResId;
+    }
+
+    public boolean isAnswered() {
+        return this.isAnswered;
     }
 
     public void setTextResId(int textResId) {
@@ -28,5 +33,9 @@ public class Question {
 
     public void setAnswerTrue(boolean answerTrue) {
         this.answerTrue = answerTrue;
+    }
+
+    public void setAnswered (boolean isAnswered) {
+        this.isAnswered = isAnswered;
     }
 }

@@ -134,12 +134,16 @@ public class QuizActivity extends AppCompatActivity {
 
         int questionTextResId = questionBank[currentIndex].getTextResId();
         questionTextView.setText(questionTextResId);
+        checkQuestionAnswered();
     }
 
     private void nextQuestion() {
         currentIndex = (currentIndex + 1) % questionBank.length;
         int questionTextResId = questionBank[currentIndex].getTextResId();
         questionTextView.setText(questionTextResId);
+        checkQuestionAnswered();
+
+
     }
 
     private void checkAnswer(boolean userPressedTrue) {
@@ -147,6 +151,19 @@ public class QuizActivity extends AppCompatActivity {
             Toast.makeText(this, R.string.correct_toast, Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(this, R.string.incorrect_toast, Toast.LENGTH_SHORT).show();
+        }
+
+        questionBank[currentIndex].setAnswered(true);
+        checkQuestionAnswered();
+    }
+
+    private void checkQuestionAnswered() {
+        if(questionBank[currentIndex].isAnswered()) {
+            trueButton.setEnabled(false);
+            falseButton.setEnabled(false);
+        } else {
+            trueButton.setEnabled(true);
+            falseButton.setEnabled(true);
         }
     }
 }
