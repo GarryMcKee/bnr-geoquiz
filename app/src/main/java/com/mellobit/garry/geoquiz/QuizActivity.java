@@ -17,6 +17,7 @@ public class QuizActivity extends AppCompatActivity {
     private static final String KEY_SCORE = "score";
     private static final String KEY_QUESTIONS_ANSWERED = "questions_answered";
     private static final String KEY_QUESTIONS_ANSWERED_INDEX = "questions_answered_index";
+    private static final int REQUEST_CODE_CHEAT = 0;
 
     private Button trueButton;
     private Button falseButton;
@@ -37,6 +38,7 @@ public class QuizActivity extends AppCompatActivity {
     private int currentIndex = 0;
     private int questionsAnswered = 0;
     private int score = 0;
+    private boolean isCheater = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,7 +92,7 @@ public class QuizActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = CheatActivity.newIntent(QuizActivity.this, questionBank[currentIndex].isAnswerTrue());
-                startActivity(intent);
+                startActivityForResult(intent, REQUEST_CODE_CHEAT);
             }
         });
 
@@ -116,6 +118,20 @@ public class QuizActivity extends AppCompatActivity {
         });
 
         checkQuestionAnswered();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode != RESULT_OK) {
+            return;
+        }
+
+        if (requestCode == REQUEST_CODE_CHEAT) {
+            if (data == null) {
+                return;
+            }
+            isCheater = CheatActivity.wasAnswerShown(data);
+        }
     }
 
     @Override
@@ -177,6 +193,7 @@ public class QuizActivity extends AppCompatActivity {
 
         int questionTextResId = questionBank[currentIndex].getTextResId();
         questionTextView.setText(questionTextResId);
+        isCheater = false;
         checkQuestionAnswered();
     }
 
@@ -184,14 +201,17 @@ public class QuizActivity extends AppCompatActivity {
         currentIndex = (currentIndex + 1) % questionBank.length;
         int questionTextResId = questionBank[currentIndex].getTextResId();
         questionTextView.setText(questionTextResId);
+        isCheater = false;
         checkQuestionAnswered();
-
-
     }
 
     private void checkAnswer(boolean userPressedTrue) {
         if(userPressedTrue == questionBank[currentIndex].isAnswerTrue()) {
             score++;
+        }
+
+        if(isCheater) {
+            Toast.makeText(this, R.string.judgment_toast, Toast.LENGTH_SHORT).show();
         }
 
         questionBank[currentIndex].setAnswered(true);
