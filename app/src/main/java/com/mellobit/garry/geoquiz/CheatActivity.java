@@ -14,8 +14,11 @@ public class CheatActivity extends AppCompatActivity {
 
     private static final String EXTRA_ANSWER_IS_TRUE = "com.mellobit.garry.geoquiz.answer_is_true";
     private static final String EXTRA_ANSWER_SHOWN = "com.mellobit.garry.geoquiz.answer_shown";
+    private static final String KEY_ANSWER_WAS_SHOWN = "answer_was_shown";
+    private static final String KEY_ANSWER_IS_TRUE = "answer_is_true";
 
     private boolean answerIsTrue;
+    private boolean answerWasShown;
 
     private TextView answerTextView;
     private Button showAnswerButton;
@@ -48,14 +51,37 @@ public class CheatActivity extends AppCompatActivity {
                 } else {
                     answerTextView.setText(R.string.false_button);
                 }
-                setAnswerShown(true);
+
+                answerWasShown = true;
+                setAnswerShown(answerWasShown);
             }
         });
+
+        if(savedInstanceState != null) {
+            answerWasShown = savedInstanceState.getBoolean(KEY_ANSWER_WAS_SHOWN);
+            answerIsTrue = savedInstanceState.getBoolean(KEY_ANSWER_IS_TRUE);
+            setAnswerShown(answerWasShown);
+
+            if(answerWasShown) {
+                if(answerIsTrue) {
+                    answerTextView.setText(R.string.true_button);
+                } else {
+                    answerTextView.setText(R.string.false_button);
+                }
+            }
+        }
     }
 
-    private void setAnswerShown(boolean isAnswerShown) {
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean(KEY_ANSWER_WAS_SHOWN, answerWasShown);
+        outState.putBoolean(KEY_ANSWER_IS_TRUE, answerIsTrue);
+    }
+
+    private void setAnswerShown(boolean answerShown) {
         Intent data = new Intent();
-        data.putExtra(EXTRA_ANSWER_SHOWN, isAnswerShown);
+        data.putExtra(EXTRA_ANSWER_SHOWN, answerShown);
         setResult(RESULT_OK, data);
     }
 }
