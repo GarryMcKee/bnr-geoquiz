@@ -1,6 +1,7 @@
 package com.mellobit.garry.geoquiz;
 
 import android.content.Intent;
+import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -17,6 +18,7 @@ public class QuizActivity extends AppCompatActivity {
     private static final String KEY_SCORE = "score";
     private static final String KEY_QUESTIONS_ANSWERED = "questions_answered";
     private static final String KEY_QUESTIONS_ANSWERED_INDEX = "questions_answered_index";
+    private static final String KEY_IS_CHEATER = "is_cheater";
     private static final int REQUEST_CODE_CHEAT = 0;
 
     private Button trueButton;
@@ -48,9 +50,10 @@ public class QuizActivity extends AppCompatActivity {
         setContentView(R.layout.activity_quiz);
 
         if(savedInstanceState != null) {
-            this.currentIndex = savedInstanceState.getInt(KEY_INDEX);
-            this.score = savedInstanceState.getInt(KEY_SCORE);
-            this.questionsAnswered = savedInstanceState.getInt(KEY_QUESTIONS_ANSWERED);
+            currentIndex = savedInstanceState.getInt(KEY_INDEX);
+            score = savedInstanceState.getInt(KEY_SCORE);
+            questionsAnswered = savedInstanceState.getInt(KEY_QUESTIONS_ANSWERED);
+            isCheater = savedInstanceState.getBoolean(KEY_IS_CHEATER);
 
             boolean[] questionAnsweredIndex = savedInstanceState.getBooleanArray(KEY_QUESTIONS_ANSWERED_INDEX);
             for(int i=0; i<questionAnsweredIndex.length; i++) {
@@ -181,6 +184,7 @@ public class QuizActivity extends AppCompatActivity {
         outState.putInt(KEY_INDEX, currentIndex);
         outState.putInt(KEY_SCORE, score);
         outState.putInt(KEY_QUESTIONS_ANSWERED, questionsAnswered);
+        outState.putBoolean(KEY_IS_CHEATER, isCheater);
 
     }
 
