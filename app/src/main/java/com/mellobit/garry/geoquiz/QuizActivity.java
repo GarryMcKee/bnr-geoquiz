@@ -1,6 +1,7 @@
 package com.mellobit.garry.geoquiz;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -19,6 +20,7 @@ public class QuizActivity extends AppCompatActivity {
     private static final String KEY_QUESTIONS_ANSWERED = "questions_answered";
     private static final String KEY_QUESTIONS_ANSWERED_INDEX = "questions_answered_index";
     private static final String KEY_QUESTIONS_CHEATED_INDEX = "questions_cheated_index";
+    private static final String KEY_CHEAT_TOKENS_REMAINING = "cheat_tokens_remaining";
     private static final String KEY_IS_CHEATER = "is_cheater";
     private static final int REQUEST_CODE_CHEAT = 0;
 
@@ -28,7 +30,9 @@ public class QuizActivity extends AppCompatActivity {
     private ImageButton previousButton;
     private ImageButton nextButton;
     private TextView questionTextView;
+    private TextView cheatsRemainingTextView;
     private boolean[] cheatedQuestionsIndex;
+    private int cheatTokens = 3;
 
     private Question[] questionBank = new Question[] {
             new Question(R.string.question_australia, true),
@@ -78,6 +82,8 @@ public class QuizActivity extends AppCompatActivity {
         nextButton = (ImageButton) findViewById(R.id.next_button);
 
         questionTextView = (TextView) findViewById(R.id.question_text_view);
+        cheatsRemainingTextView = (TextView) findViewById(R.id.cheats_remaining_text_view);
+        cheatsRemainingTextView.setText(getString(R.string.cheats_remaining_label) + cheatTokens);
 
         final int questionTextResId = questionBank[currentIndex].getTextResId();
         questionTextView.setText(questionTextResId);
@@ -160,6 +166,13 @@ public class QuizActivity extends AppCompatActivity {
             if (data == null) {
                 return;
             }
+            cheatTokens--;
+            cheatsRemainingTextView.setText(getString(R.string.cheats_remaining_label) + cheatTokens);
+            if(cheatTokens <= 0) {
+                cheatButton.setEnabled(false);
+                cheatsRemainingTextView.setTextColor(Color.RED);
+            }
+
             isCheater = CheatActivity.wasAnswerShown(data);
             cheatedQuestionsIndex[currentIndex] = true;
         }

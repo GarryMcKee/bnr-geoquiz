@@ -15,6 +15,7 @@
     <string name="judgment_toast">Cheating is wrong</string>
     <string name="score_label">You got %f%% of the questions correct!</string>
     <string name="warning_text">Are you sure you want to do this?</string>
+    <string name="cheats_remaining_label">Cheats Left: </string>
 
     <!-- Questions -->
     <string name="question_australia">Canberra is the capital of Australia</string>
