@@ -1,10 +1,13 @@
 package com.mellobit.garry.geoquiz;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewAnimationUtils;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -54,6 +57,23 @@ public class CheatActivity extends AppCompatActivity {
 
                 answerWasShown = true;
                 setAnswerShown(answerWasShown);
+
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+                    int cx = showAnswerButton.getWidth()/2;
+                    int cy = showAnswerButton.getHeight()/2;
+                    float radius = showAnswerButton.getWidth();
+                    Animator animator = ViewAnimationUtils
+                                .createCircularReveal(showAnswerButton, cx, cy, radius, 0);
+
+                    animator.addListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            showAnswerButton.setVisibility(View.INVISIBLE);
+                        }
+                    });
+
+                    animator.start();
+                }
             }
         });
 
