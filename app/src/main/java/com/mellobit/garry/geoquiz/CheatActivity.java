@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -24,6 +25,7 @@ public class CheatActivity extends AppCompatActivity {
     private boolean answerWasShown;
 
     private TextView answerTextView;
+    private TextView apiTextView;
     private Button showAnswerButton;
 
     public static Intent newIntent(Context packageContext, boolean answerIsTrue) {
@@ -44,7 +46,10 @@ public class CheatActivity extends AppCompatActivity {
         answerIsTrue = getIntent().getExtras().getBoolean(EXTRA_ANSWER_IS_TRUE, false);
 
         answerTextView = (TextView) findViewById(R.id.answer_text_view);
+        apiTextView = (TextView) findViewById(R.id.api_level_text_view);
         showAnswerButton = (Button)findViewById(R.id.show_answer_button);
+
+        apiTextView.setText("API Level " + Build.VERSION.SDK_INT);
 
         showAnswerButton.setOnClickListener(new View.OnClickListener() {
             @Override
