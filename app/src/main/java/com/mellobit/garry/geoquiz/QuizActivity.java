@@ -18,6 +18,7 @@ public class QuizActivity extends AppCompatActivity {
     private static final String KEY_SCORE = "score";
     private static final String KEY_QUESTIONS_ANSWERED = "questions_answered";
     private static final String KEY_QUESTIONS_ANSWERED_INDEX = "questions_answered_index";
+    private static final String KEY_QUESTIONS_CHEATED_INDEX = "questions_cheated_index";
     private static final String KEY_IS_CHEATER = "is_cheater";
     private static final int REQUEST_CODE_CHEAT = 0;
 
@@ -27,6 +28,7 @@ public class QuizActivity extends AppCompatActivity {
     private ImageButton previousButton;
     private ImageButton nextButton;
     private TextView questionTextView;
+    private boolean[] cheatedQuestionsIndex;
 
     private Question[] questionBank = new Question[] {
             new Question(R.string.question_australia, true),
@@ -48,6 +50,7 @@ public class QuizActivity extends AppCompatActivity {
 
         Log.d(LOG_TAG, "onCreate()");
         setContentView(R.layout.activity_quiz);
+        cheatedQuestionsIndex = new boolean[questionBank.length];
 
         if(savedInstanceState != null) {
             currentIndex = savedInstanceState.getInt(KEY_INDEX);
@@ -63,6 +66,8 @@ public class QuizActivity extends AppCompatActivity {
                     questionBank[i].setAnswered(false);
                 }
             }
+
+            cheatedQuestionsIndex = savedInstanceState.getBooleanArray(KEY_QUESTIONS_CHEATED_INDEX);
         }
 
         trueButton = (Button) findViewById(R.id.true_button);
@@ -124,6 +129,28 @@ public class QuizActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        boolean[] questionsAnsweredIndex = new boolean[questionBank.length];
+
+        for (int i =0; i < questionBank.length; i++) {
+            if(questionBank[i].isAnswered()){
+                questionsAnsweredIndex[i] = true;
+            } else {
+                questionsAnsweredIndex[i] = false;
+            }
+        }
+
+        outState.putBooleanArray(KEY_QUESTIONS_CHEATED_INDEX, cheatedQuestionsIndex);
+        outState.putBooleanArray(KEY_QUESTIONS_ANSWERED_INDEX, questionsAnsweredIndex);
+        outState.putInt(KEY_INDEX, currentIndex);
+        outState.putInt(KEY_SCORE, score);
+        outState.putInt(KEY_QUESTIONS_ANSWERED, questionsAnswered);
+        outState.putBoolean(KEY_IS_CHEATER, isCheater);
+
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode != RESULT_OK) {
             return;
@@ -134,6 +161,7 @@ public class QuizActivity extends AppCompatActivity {
                 return;
             }
             isCheater = CheatActivity.wasAnswerShown(data);
+            cheatedQuestionsIndex[currentIndex] = true;
         }
     }
 
@@ -167,27 +195,6 @@ public class QuizActivity extends AppCompatActivity {
         Log.d(LOG_TAG, "onDestroy()");
     }
 
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        boolean[] questionsAnsweredIndex = new boolean[questionBank.length];
-
-        for (int i =0; i < questionBank.length; i++) {
-            if(questionBank[i].isAnswered()){
-                questionsAnsweredIndex[i] = true;
-            } else {
-                questionsAnsweredIndex[i] = false;
-            }
-        }
-
-        outState.putBooleanArray(KEY_QUESTIONS_ANSWERED_INDEX, questionsAnsweredIndex);
-        outState.putInt(KEY_INDEX, currentIndex);
-        outState.putInt(KEY_SCORE, score);
-        outState.putInt(KEY_QUESTIONS_ANSWERED, questionsAnswered);
-        outState.putBoolean(KEY_IS_CHEATER, isCheater);
-
-    }
-
     private void previousQuestion() {
         if (currentIndex > 0) {
             currentIndex--;
@@ -197,7 +204,7 @@ public class QuizActivity extends AppCompatActivity {
 
         int questionTextResId = questionBank[currentIndex].getTextResId();
         questionTextView.setText(questionTextResId);
-        isCheater = false;
+        isCheater = cheatedQuestionsIndex[currentIndex];
         checkQuestionAnswered();
     }
 
@@ -205,7 +212,7 @@ public class QuizActivity extends AppCompatActivity {
         currentIndex = (currentIndex + 1) % questionBank.length;
         int questionTextResId = questionBank[currentIndex].getTextResId();
         questionTextView.setText(questionTextResId);
-        isCheater = false;
+        isCheater = cheatedQuestionsIndex[currentIndex];
         checkQuestionAnswered();
     }
 
